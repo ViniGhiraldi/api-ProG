@@ -2,19 +2,17 @@ import 'dotenv/config';
 import { knex } from 'knex';
 import { development, production, test } from './Environment';
 
-const Knex = knex;
+const getEnvironment = () => {
+    switch (process.env.NODE_ENV) {
+        case 'production':
+            return production;
+        
+        case 'test':
+            return test;
 
-switch (process.env.NODE_ENV) {
-    case 'prod':
-        Knex(production);
-        break;
-
-    case 'test':
-        Knex(test);
-        break;
-
-    default:
-        Knex(development);
+        default:
+            return development;
+    }
 }
 
-export { Knex }
+export const Knex = knex(getEnvironment());

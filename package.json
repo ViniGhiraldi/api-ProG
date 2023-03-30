@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx watch src/index.ts",
-    "build": "tsup src"
+    "build": "tsup src",
+    "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
+    "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
+    "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
+    "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
   },
   "repository": {
     "type": "git",
