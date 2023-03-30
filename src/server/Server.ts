@@ -1,13 +1,11 @@
 import express from 'express';
-import 'dotenv/config';
-import './shared/services/TranslationsYup';
-
 import { router } from './routes';
+import 'dotenv/config';
 
-const server = express();
+const Server = express();
 
-server.use(express.json());
+Server.use(express.json());
+Server.use(router);
 
-server.use(router);
 
-export { server };
+export { Server };
