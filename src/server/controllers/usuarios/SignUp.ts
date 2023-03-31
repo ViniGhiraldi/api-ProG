@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 import { UsuariosProvider } from '../../database/providers';
+import { hashPassword } from '../../shared/services/PasswordCrypto';
 
 const userSchema = z.object({
     nome: z.string().min(3),
@@ -18,7 +19,9 @@ export const signUp = async (req:Request<{},{},User>, res:Response) => {
         return res.status(StatusCodes.BAD_REQUEST).json(dataValidation.error);
     }
 
-    const result = await UsuariosProvider.signUp(dataValidation.data);
+    const hashedPassword = await hashPassword(dataValidation.data.senha);
+
+    const result = await UsuariosProvider.signUp({...dataValidation.data, senha: hashedPassword});
 
     if(result instanceof Error){
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
