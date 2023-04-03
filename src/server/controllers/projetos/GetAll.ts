@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import {z} from 'zod';
 import { ensureAuthenticated } from '../../shared/middleware/EnsureAuthenticated';
+import { ProjetosProvider } from '../../database/providers/projetos';
 
 const projetoSchema = z.object({
     filter: z.string().optional(),
@@ -21,5 +22,12 @@ export const getAll = async (req:Request<{},{},{},Projeto>, res:Response) => {
         return res.status(StatusCodes.BAD_REQUEST).json(dataValidation.error);
     }
 
-    return res.status(StatusCodes.CREATED).json(dataValidation.data);
+    const result = await ProjetosProvider.getAll(req.query.filter, req.query.user_id);
+    if(result instanceof Error){
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: result.message
+        });
+    }
+
+    return res.status(StatusCodes.OK).json(result);
 }

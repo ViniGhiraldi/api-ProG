@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import {z} from 'zod';
 import { ensureAuthenticated } from '../../shared/middleware/EnsureAuthenticated';
+import { ProjetosProvider } from '../../database/providers/projetos';
 
 const paramSchema = z.object({
-    id: z.number().positive().int()
+    id: z.number().or(z.string().regex(/^\d+$/).transform(Number)).refine((n) => n>0)
 })
 
 const projetoSchema = z.object({
@@ -33,8 +34,12 @@ export const updateById = async (req:Request<Param,{},Projeto>, res:Response) =>
         return res.status(StatusCodes.BAD_REQUEST).json(dataValidation.error);
     }
 
-    return res.status(StatusCodes.CREATED).json({
-        id: paramValidation.data,
-        data: dataValidation.data
-    });
+    const result = await ProjetosProvider.updateById(req.params.id, req.body);
+    if(result instanceof Error){
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: result.message
+        });
+    }
+
+    return res.status(StatusCodes.NO_CONTENT).send('');
 }

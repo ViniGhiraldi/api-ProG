@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import {number, transformer, z} from 'zod';
 import { ensureAuthenticated } from '../../shared/middleware/EnsureAuthenticated';
+import { ProjetosProvider } from '../../database/providers/projetos';
 
 const projetoSchema = z.object({
     titulo: z.string().min(3),
@@ -24,5 +25,12 @@ export const create = async (req:Request<{},{},Projeto>, res:Response) => {
         return res.status(StatusCodes.BAD_REQUEST).json(dataValidation.error);
     }
 
-    return res.status(StatusCodes.CREATED).json(dataValidation.data);
+    const result = await ProjetosProvider.create(req.body);
+    if(result instanceof Error){
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: result.message
+        });
+    }
+
+    return res.status(StatusCodes.CREATED).json(result);
 }

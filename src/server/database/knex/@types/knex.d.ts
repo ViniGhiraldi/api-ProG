@@ -1,4 +1,4 @@
-import { IUsuario } from "../../models/IUsuario";
+import { IUsuario, IProjeto } from "../../models";
 
 declare module 'knex/types/tables'{
     interface Tables{
