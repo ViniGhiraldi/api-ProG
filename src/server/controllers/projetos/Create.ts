@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import {number, transformer, z} from 'zod';
+import {z} from 'zod';
 import { ensureAuthenticated } from '../../shared/middleware/EnsureAuthenticated';
 import { ProjetosProvider } from '../../database/providers/projetos';
 

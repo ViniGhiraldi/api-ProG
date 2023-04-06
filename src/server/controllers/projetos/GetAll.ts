@@ -28,6 +28,7 @@ export const getAll = async (req:Request<{},{},{},Projeto>, res:Response) => {
             error: result.message
         });
     }
+    console.log(result)
 
     return res.status(StatusCodes.OK).json(result);
 }
