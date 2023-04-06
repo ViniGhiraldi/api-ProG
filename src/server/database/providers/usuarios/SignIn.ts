@@ -10,6 +10,6 @@ export const signIn = async (email: string): Promise<IUsuario | Error> => {
         return result;
     } catch (error) {
         console.log(error);
-        return new Error('Erro ao consultar registros');
+        return new Error('Email ou senha inválidos');
     }
 }

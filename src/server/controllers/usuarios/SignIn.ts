@@ -21,7 +21,7 @@ export const signIn = async (req:Request<{},{},User>, res:Response) => {
 
     const result = await UsuariosProvider.signIn(dataValidation.data.email);
     if(result instanceof Error){
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        return res.status(StatusCodes.UNAUTHORIZED).json({
             error: result.message
         })
     }
